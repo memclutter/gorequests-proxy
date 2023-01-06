@@ -4,6 +4,7 @@ go 1.18
 
 require (
 	github.com/hashicorp/go-retryablehttp v0.7.2
+	github.com/memclutter/gocore v0.0.23
 	github.com/stretchr/testify v1.8.1
 	h12.io/socks v1.0.3
 )

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/hashicorp/go-retryablehttp"
+	"github.com/memclutter/gocore/pkg/coreslices"
 	"h12.io/socks"
 	"math/rand"
 	"net"
@@ -18,6 +19,9 @@ type Proxy struct {
 }
 
 func (m *Proxy) ClientOverride(c *http.Client) (*http.Client, error) {
+	m.Proxies = coreslices.StringApply(m.Proxies, func(i int, s string) string { return strings.TrimSpace(s) })
+	m.Proxies = coreslices.StringFilter(m.Proxies, func(i int, s string) bool { return s != "" })
+
 	if len(m.Proxies) == 0 {
 		if m.AllowEmpty {
 			return c, nil

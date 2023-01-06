@@ -38,6 +38,18 @@ func (suite *ProxySuite) TestEmptyProxiesAllowEmpty() {
 	assert.NotNil(suite.T(), overrideClient.Transport, "should be return not nil client.Transport")
 }
 
+func (suite *ProxySuite) TestEmptyUrl() {
+	// Data
+	client := &http.Client{}
+	proxyUrl := []string{"", "  ", " "}
+
+	// Run tests
+	_, err := (&Proxy{Proxies: proxyUrl}).ClientOverride(client)
+
+	// Assertions
+	assert.Error(suite.T(), err, "should be throw error")
+}
+
 func (suite *ProxySuite) TestInvalidUrl() {
 	// Data
 	client := &http.Client{}
