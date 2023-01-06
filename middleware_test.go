@@ -12,7 +12,7 @@ type ProxySuite struct {
 	suite.Suite
 }
 
-func (suite ProxySuite) TestEmptyProxies() {
+func (suite *ProxySuite) TestEmptyProxies() {
 	// Data
 	client := &http.Client{}
 	var proxyUrl []string
@@ -24,7 +24,21 @@ func (suite ProxySuite) TestEmptyProxies() {
 	assert.Error(suite.T(), err, "should be throw error")
 }
 
-func (suite ProxySuite) TestInvalidUrl() {
+func (suite *ProxySuite) TestEmptyProxiesAllowEmpty() {
+	// Data
+	client := &http.Client{Transport: &http.Transport{}}
+	var proxyUrl []string
+
+	// Run tests
+	overrideClient, err := (&Proxy{Proxies: proxyUrl, AllowEmpty: true}).ClientOverride(client)
+
+	// Assertions
+	assert.NoError(suite.T(), err, "should be run without error")
+	assert.NotNil(suite.T(), overrideClient, "should be return not nil client")
+	assert.NotNil(suite.T(), overrideClient.Transport, "should be return not nil client.Transport")
+}
+
+func (suite *ProxySuite) TestInvalidUrl() {
 	// Data
 	client := &http.Client{}
 	proxyUrl := []string{string([]byte{0x7f})}
@@ -36,7 +50,7 @@ func (suite ProxySuite) TestInvalidUrl() {
 	assert.Error(suite.T(), err, "should be throw error")
 }
 
-func (suite ProxySuite) TestNoTransportHttpProxies() {
+func (suite *ProxySuite) TestNoTransportHttpProxies() {
 	tests := []struct {
 		proxyUrl []string
 	}{
@@ -64,7 +78,7 @@ func (suite ProxySuite) TestNoTransportHttpProxies() {
 	}
 }
 
-func (suite ProxySuite) TestNoTransportSocksProxies() {
+func (suite *ProxySuite) TestNoTransportSocksProxies() {
 	tests := []struct {
 		proxyUrl []string
 	}{
@@ -92,7 +106,7 @@ func (suite ProxySuite) TestNoTransportSocksProxies() {
 	}
 }
 
-func (suite ProxySuite) TestWithTransportHttpProxies() {
+func (suite *ProxySuite) TestWithTransportHttpProxies() {
 	tests := []struct {
 		proxyUrl []string
 	}{
@@ -119,7 +133,7 @@ func (suite ProxySuite) TestWithTransportHttpProxies() {
 	}
 }
 
-func (suite ProxySuite) TestWithTransportSocksProxies() {
+func (suite *ProxySuite) TestWithTransportSocksProxies() {
 	tests := []struct {
 		proxyUrl []string
 	}{
@@ -146,7 +160,7 @@ func (suite ProxySuite) TestWithTransportSocksProxies() {
 	}
 }
 
-func (suite ProxySuite) TestWithRetryableTransportHttpProxies() {
+func (suite *ProxySuite) TestWithRetryableTransportHttpProxies() {
 	tests := []struct {
 		proxyUrl []string
 	}{
@@ -176,7 +190,7 @@ func (suite ProxySuite) TestWithRetryableTransportHttpProxies() {
 	}
 }
 
-func (suite ProxySuite) TestWithRetryableTransportSocksProxies() {
+func (suite *ProxySuite) TestWithRetryableTransportSocksProxies() {
 	tests := []struct {
 		proxyUrl []string
 	}{
